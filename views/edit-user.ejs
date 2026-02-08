@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div id="toast-container"></div>
+
+    <%- include('partials/navbar') %>
+
+    <main class="container mt-5">
+        <div class="form-card">
+            <div class="form-header">
+                <h2 class="neon-text-blue">
+                    <%= title %>
+                </h2>
+                <p class="text-muted">ID_REF: <%= user ? user.id : 'NULL' %>
+                </p>
+            </div>
+
+            <% if (!user) { %>
+                <div class="neon-error-box">
+                    USER_NOT_FOUND: Access Denied.
+                </div>
+                <% } else { %>
+                    <form action="/user/edit/<%= user.id %>" method="post">
+                        <div class="mb-4">
+                            <label for="name" class="form-label neon-label">Subject Name</label>
+                            <input type="text" class="form-control neon-input" id="name" name="name"
+                                value="<%= user.name %>" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="form-label neon-label">Network Email</label>
+                            <input type="email" class="form-control neon-input" id="email" name="email"
+                                value="<%= user.email %>" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="/user/list-users" class="btn btn-outline-secondary">Abort</a>
+                            <button type="submit" class="btn btn-neon-action">Execute Update</button>
+                        </div>
+                    </form>
+                <% } %>
+        </div>
+    </main>
+</body>
+
+</html>

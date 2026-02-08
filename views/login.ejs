@@ -1,0 +1,104 @@
+
+    <% layout('layout') %>
+    <div id="toast-container"></div>
+    
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Login</h2>
+                <form id="login-form" action="/login" method="POST">
+                    <div class="form-group mb-3">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" minlength="6" name="password" class="form-control" required>
+                    </div>
+                    <button id="loginButton" disabled class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.querySelector("#login-form");
+        const mailInput = document.querySelector("#email");
+        const passwordInput = document.querySelector("#password");
+        const loginBtn = document.querySelector("#loginButton");
+
+        loginForm.addEventListener('submit', (e)=>{
+            e.preventDefault();
+        })
+        const localStorageManager = {
+            getToken: ()=> localStorage.getItem("token"),
+            getUser: ()=> localStorage.getItem("user"),
+            setToken: (token)=> localStorage.setItem("token", token),
+            setUser: (user) => localStorage.setItem("user", JSON.stringify(user)),
+        }
+
+        loginForm.addEventListener('input', (e)=>{            
+            console.log(loginForm);
+            
+            loginBtn.disabled = !loginForm.checkValidity();
+        })
+        
+        loginBtn.addEventListener('click',async ()=>{
+            try{
+                const response = await fetch(`/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: mailInput.value,
+                        password: passwordInput.value
+                    })
+                })
+
+                const data = await response.json();
+
+                if (response.ok && data.token) {
+                    localStorageManager.setToken(data.token)
+                    localStorageManager.setUser(data.user)
+
+                    // Redirect user
+                    localStorage.setItem(
+                        'toast',
+                        JSON.stringify({
+                            message: `Welcome ${data.user.name}`,
+                            type: 'success'
+                        })
+                    );
+
+                    window.location.href = '/user/list-users';
+                }
+                else {
+                    console.log('Login failed', data);
+                }
+            }
+            catch(e){
+                console.log(e);
+            }
+        })
+
+        const showToast = (message, type = 'success') => {
+                const container = document.getElementById('toast-container');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+
+                // Icon with a matching neon glow color
+                const glowColor = type === 'success' ? '#00ffaa' : '#ff0055';
+                const icon = `<span style="color: ${glowColor}; text-shadow: 0 0 8px ${glowColor}; margin-right: 12px;">●</span>`;
+
+                toast.innerHTML = `${icon} <span style="letter-spacing: 0.5px;">${message}</span>`;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3200);
+            };
+    </script>

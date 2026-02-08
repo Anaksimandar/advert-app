@@ -1,0 +1,120 @@
+
+    
+        <div id="custom-confirm" class="confirm-overlay" style="display: none;">
+            <div class="confirm-card">
+                <div class="confirm-glow"></div>
+                <h3>Delete user</h3>
+                <p>Are you sure you want to delete this user? This action is permanent.</p>
+                <div class="confirm-buttons">
+                    <button onclick="closeConfirm()" class="btn-secondary">Cancel</button>
+                    <button id="confirm-yes" class="btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast-container"></div>
+
+        <main class="container">
+            <h2 class="display-4">
+                <%= title %>
+            </h2>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(user) { %>
+                        <tr>
+                            <td>
+                                <%= user.name %>
+                            </td>
+                            <td>
+                                <%= user.email %>
+                            </td>
+                            <div class="button-container">
+                                <td>
+                                    <a href="/user/edit/<%= user.id %>" class="btn btn-info">Edit User</a>
+                                    <button onclick="confirmDeleteUser(`<%=user.id%>`)" id="btn-delete" class="btn btn-danger">Delete</button>
+                                </td>
+                            </div>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </main>
+
+    <script type="module">
+
+            let userToDelete = null;
+
+            const confirmDeleteUser = (userId) => {
+                userToDelete = userId; // Store ID temporarily
+                document.getElementById('custom-confirm').style.display = 'flex';
+            };
+
+            const closeConfirm = () => {
+                document.getElementById('custom-confirm').style.display = 'none';
+            };
+
+            // Handle the actual deletion when "Delete" is clicked in the modal
+                document.getElementById('confirm-yes').onclick = () => {
+                    if (!userToDelete) return;
+
+                    fetch(`/user/${userToDelete}`, { method: 'DELETE' })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.href = '/user/list-users?deleted=true';
+                            } else {
+                                closeConfirm();
+                                showToast('Failed to delete user', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            closeConfirm();
+                            showToast('Error connecting to server', 'error');
+                        });
+                };
+
+            const showToast = (message, type = 'success') => {
+                    const container = document.getElementById('toast-container');
+                    if (!container) return;
+
+                    const toast = document.createElement('div');
+                    toast.className = `toast ${type}`;
+
+                    // Icon with a matching neon glow color
+                    const glowColor = type === 'success' ? '#00ffaa' : '#ff0055';
+                    const icon = `<span style="color: ${glowColor}; text-shadow: 0 0 8px ${glowColor}; margin-right: 12px;">●</span>`;
+
+                    toast.innerHTML = `${icon} <span style="letter-spacing: 0.5px;">${message}</span>`;
+
+                    container.appendChild(toast);
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 3200);
+                };
+
+            // On Page Load: Check if we just deleted a user
+            window.onload = () => {
+                const toast = localStorage.getItem('toast');
+                const urlParams = new URLSearchParams(window.location.search);
+
+                if (urlParams.has('deleted')) {
+                    showToast('User deleted successfully!', 'success');
+                    // Clean the URL so the toast doesn't pop up again on manual refresh
+                    window.history.replaceState({}, document.title, "/user/list-users");
+                }
+
+                if (toast) {
+                    const { message, type } = JSON.parse(toast);
+                    showToast(message, type);
+                    localStorage.removeItem('toast');
+                }
+                
+            };
+    </script>

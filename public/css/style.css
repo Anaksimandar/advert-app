@@ -1,0 +1,266 @@
+/* In your style.css */
+#toast-container {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex !important;
+    align-items: center;
+    min-width: 350px;
+    background-color: #1a1f26!important;
+    /* Darker Slate for better neon contrast */
+    color: #ffffff !important;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    position: relative;
+    border-left: 5px solid;
+    /* The "Neon Tube" */
+
+    /* Animation: Drop and Fall */
+    animation: neonSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        neonFadeOut 0.5s 2.5s forwards;
+}
+
+/* --- NEON SUCCESS (Green) --- */
+.toast.success {
+    border-color: #00ffaa;
+    /* The glow effect: Sharp glow + Wide glow */
+    box-shadow: 0 0 15px rgba(0, 255, 170, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+}
+
+/* --- NEON ERROR (Red/Pink) --- */
+.toast.error {
+    border-color: #ff0055;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
+}
+
+@keyframes neonSlideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes neonFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+}
+
+/* Custom Button Base */
+.btn {
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Neon Success / Primary Button */
+.btn-info,
+.btn-primary {
+    background-color: transparent !important;
+    border: 2px solid #00ffaa !important;
+    color: #00ffaa !important;
+}
+
+.btn-info:hover {
+    background-color: #00ffaa !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 15px rgba(0, 255, 170, 0.5);
+}
+
+/* Neon Danger / Delete Button */
+.btn-danger {
+    background-color: transparent !important;
+    border: 2px solid #ff0055 !important;
+    color: #ff0055 !important;
+}
+
+.btn-danger:hover {
+    background-color: #ff0055 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+}
+
+body {
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    /* Modern clean font */
+}
+
+.navbar {
+    background-color: #1e293b !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table {
+    color: #f8fafc !important;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Dark Overlay */
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.9);
+    /* Slate background with opacity */
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+/* Modal Card */
+.confirm-card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 0, 85, 0.3);
+    width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Neon Glow behind card */
+.confirm-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.15);
+    pointer-events: none;
+}
+
+.confirm-card h3 {
+    color: #ff0055;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.confirm-card p {
+    color: #94a3b8;
+    margin-bottom: 25px;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Cancel Button */
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #94a3b8;
+    color: #94a3b8;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Container for the form */
+.form-card {
+    background: #1e293b;
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Neon Inputs */
+.neon-input {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.neon-input:focus {
+    border-color: #00ffaa !important;
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.3) !important;
+    outline: none;
+}
+
+/* Labels */
+.neon-label {
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Action Button */
+.btn-neon-action {
+    background: transparent;
+    border: 2px solid #00ffaa;
+    color: #00ffaa;
+    padding: 10px 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-neon-action:hover {
+    background: #00ffaa;
+    color: #0f172a;
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.6);
+}
+
+.neon-text-blue {
+    color: #38bdf8;
+    /* Soft Cyber Blue */
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}

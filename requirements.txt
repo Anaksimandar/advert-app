@@ -1,0 +1,18 @@
+Oglas
+    - id
+    - description
+    - price - object, with keys number amount and currency - enum type (USD, EUR, GBP, other)
+    - mails: object Mail, with keys email, enum type (personal, work)
+    - cetegory: enum (music equipment, sports equipment, household, electronics, other)
+    - tags: array of strings
+    - createdAt
+    - expiryDate
+
+- User
+    - id
+    - name
+    - email
+    - passwordHash
+    - phoneNumber
+    - address: object Address, with keys street, city, state, zipCode, country
+
